@@ -14,6 +14,7 @@ my (
     $debug,
     $raw,
     $jpeg,
+    $restore,
     $all,
     $dir,
 ) = ();
@@ -22,6 +23,7 @@ my %GetOptionsHash = (
     'debug'        => \$debug,
     'raw'          => \$raw,
     'jpeg'         => \$jpeg,
+    'restore'      => \$restore,
     'all'          => \$all,
     'dir=s'        => \$dir,
 );
@@ -46,6 +48,12 @@ if ($jpeg or $all) {
 
 if ($raw or $all) {
     if (tools::rename_raw($dir, \@all_files)) {
+        exit 1;
+    }
+}
+
+if ($restore) {
+    if (tools::restore_original_name($dir, \@all_files)) {
         exit 1;
     }
 }

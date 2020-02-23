@@ -25,6 +25,10 @@ sub rename_jpeg($$) {
         my $other_info = $exif->get_other_info();
 
         my $timestamp = $other_info->{'Image Generated'};
+        if (!$timestamp) {
+            print "It seems that $pic doesn't have EXIF info\n";
+            next;
+        }
         $timestamp =~ s/:/-/g;
         $timestamp =~ s/ /_/g;
 
@@ -45,7 +49,7 @@ sub rename_raw($$) {
     my $dir = shift;
     my @all_files = @{+shift};
 
-    my @pics = grep {/\.(CR2|ARW)/} @all_files;
+    my @pics = grep {/\.(CR2|ARW|SRW)/} @all_files;
     my $renamed = 0;
     foreach my $pic (@pics) {
         my $full_name = $dir.'\\'.$pic;
@@ -74,7 +78,39 @@ sub compose_new_name($$$) {
     my $dir = shift;
     my $config = shift;
 
-    return $dir.'\\'.$config->{'timestamp'}.'_'.$pic;
+    if ($config->{'timestamp'}) {
+        return $dir.'\\'.$config->{'timestamp'}.'_'.$pic;
+    }
+}
+
+sub restore_original_name($$) {
+    my $dir = shift;
+    my @all_files = @{+shift};
+
+    my @pics = grep {/\.(jpg|jpeg|JPG|JPEG)/} @all_files;
+
+    # restoring JPEGs names, examples: SAM_7074.jpg, IMG_1102.jpg
+    my $restored = 0;
+    foreach my $pic (@pics) {
+        my $full_name = $dir.'\\'.$pic;
+        my $new_name;
+        if ($pic =~ /((sam|img)_\d+)\S+(\.\S+)/) {
+            # photos from cameras: 20160208-sam_7074_32246700620_o.jpg
+            $new_name = $dir.'\\'.uc($1).$3;
+        } elsif ($pic =~ /(\d\d\d\d-\d\d-\d\d)-(\d\d)(\d\d)(\d\d)\S+(\.\S+)/) {
+            # photos from ipad/iphone: 2016-01-30-224544_28731621530_o.jpg
+            $new_name = $dir.'\\'.$1." $2.$3.$4".$5;
+        } else {
+            next;
+        }
+        print "$full_name to \n$new_name\n\n";
+        if (!rename ($full_name, $new_name)) {
+            print "Can't rename $pic: $!\n";
+            return 1;
+        }
+        $restored++;
+    }
+    print "Restored names: $restored\n";
 }
 
 1;
