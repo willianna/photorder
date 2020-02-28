@@ -94,16 +94,25 @@ sub restore_original_name($$) {
     foreach my $pic (@pics) {
         my $full_name = $dir.'\\'.$pic;
         my $new_name;
-        if ($pic =~ /((sam|img)_\d+)\S+(\.\S+)/) {
-            # photos from cameras: 20160208-sam_7074_32246700620_o.jpg
-            $new_name = $dir.'\\'.uc($1).$3;
+        if ($pic =~ /((sam|img|SAM|IMG)_\d\d\d\d)/) {
+            # photos from cameras: 20160208-sam_7074_32246700620_o.jpg, 20160512-SAM_4450.jpg
+            $new_name = $dir.'\\'.uc($1);
+            if ($pic =~ /\.(jpg|JPG|jpeg|JPEG)/) {
+                $new_name = $new_name.".$1";
+            }
         } elsif ($pic =~ /(\d\d\d\d-\d\d-\d\d)-(\d\d)(\d\d)(\d\d)\S+(\.\S+)/) {
             # photos from ipad/iphone: 2016-01-30-224544_28731621530_o.jpg
             $new_name = $dir.'\\'.$1." $2.$3.$4".$5;
         } else {
             next;
         }
+        next if $full_name eq $new_name;
+
         print "$full_name to \n$new_name\n\n";
+        if (-e $new_name) {
+            print "Error: file $new_name exists\n";
+            return 1;
+        }
         if (!rename ($full_name, $new_name)) {
             print "Can't rename $pic: $!\n";
             return 1;
