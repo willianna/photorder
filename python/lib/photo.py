@@ -1,11 +1,13 @@
-import pathlib
 import os
 import re
+
+from exif import Image
+from datetime import datetime
 
 supported_jpeg_formats = ['jpg', 'JPG', 'jpeg', 'JPEG']
 supported_raw_formats = []
 
-# TODOL logging
+# TODO: logging
 
 class PhotoDirectory(object):
     def __init__(self, directory):
@@ -15,27 +17,28 @@ class PhotoDirectory(object):
 
     def _initialize_directory(self, directory):
         photos = []
-
         # get all photos from the directory
         for root, dirs, files in (os.walk(directory)):
             for filename in files:
                 if is_photo(filename):
-                    photo = Photo(filename)
+                    photo = Photo(os.path.abspath(directory + '/' + filename))
                     photos.append(photo)
+            break # prevent descending into subfolders
         return photos
 
 
 class Photo(object):
     def __init__(self, filename):
-        self.name = filename
+        self.name = os.path.basename(filename)
         self.extension = self._get_extension()
-        self.absolute_path = os.path.abspath(filename)
-        self.camera, self.original_name = self._get_camera_info()
+        self.absolute_path = filename
+        self.directory = os.path.dirname(filename)
+        self.camera, self.original_name = self._get_origin_info()
         self.format = self._get_format()
-        self.creation_date = None
+        self.creation_date = self._get_creation_date()
         pass
 
-    def _get_camera_info(self):
+    def _get_origin_info(self):
         # Samsung NX210 (SAM_7074.jpg)
         match = re.search(r'SAM_\d{4}', self.name, re.IGNORECASE)
         if match is not None:
@@ -46,13 +49,16 @@ class Photo(object):
         match = re.search(r'IMG_\d{4}', self.name, re.IGNORECASE)
         if match is not None:
             original_name = match[0].upper() + '.' + self.extension
-            return 'Canon G9X',original_name
+            return 'Canon G9X', original_name
 
         # Sony RX100 IV (DSC01524.ARW)
         match = re.search(r'DSC\d{5}', self.name, re.IGNORECASE)
         if match is not None:
             original_name = match[0].upper() + '.' + self.extension
             return 'Sony RX100 IV', original_name
+
+        # exception
+        return 'unknown', 'unknown'
 
 
     def _get_format(self):
@@ -61,9 +67,17 @@ class Photo(object):
         if self.extension in supported_raw_formats:
             return 'RAW'
 
+
     def _get_extension(self):
         extension = self.name.split('.')[-1]
         return extension
+
+
+    def _get_creation_date(self):
+        with open(self.absolute_path, 'rb') as photo:
+            exif = Image(photo)
+            return datetime.strptime(exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
+
 
     def print_info(self):
         print('Name:', self.name)
