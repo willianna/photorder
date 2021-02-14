@@ -6,7 +6,7 @@ from lib import tools
 
 parser = argparse.ArgumentParser(description="Tool for photos reordering")
 parser.add_argument(
-    '-d', '--dir', dest='directory', # what if it is not set or doesn't exist?
+    '-d', '--dir', dest='directory', required=True,
     help="directory with photos"
 )
 parser.add_argument(
