@@ -60,7 +60,7 @@ class Photo(object):
             return 'Sony RX100 IV', original_name
 
         # exception
-        return 'unknown', 'unknown'
+        return None, None
 
 
     def _get_format(self):
@@ -78,7 +78,10 @@ class Photo(object):
     def _get_creation_date(self):
         with open(self.absolute_path, 'rb') as photo:
             exif = Image(photo)
-            return datetime.strptime(exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
+            if hasattr(exif, 'datetime_original'):
+                return datetime.strptime(exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
+            else:
+                return None
 
 
     def print_info(self):
