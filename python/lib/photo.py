@@ -14,8 +14,10 @@ class PhotoDirectory(object):
         if not os.path.isdir(directory):
             # what type of exception is better to use here?
             raise Exception(f"Directory \"{directory}\" doesn't exist")
-        self.photos = self._initialize_directory(directory)
         self.path = directory
+        self.photos = self._initialize_directory(directory)
+        if not self.photos:
+            raise Exception(f"Directory \"{directory}\" doesn't have photos")
 
     def _initialize_directory(self, directory):
         photos = []
