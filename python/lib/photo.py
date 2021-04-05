@@ -43,6 +43,12 @@ class Photo(object):
         pass
 
     def _get_origin_info(self):
+        # Samsung WB510 (SDC15036.jpg)
+        match = re.search(r'SDC\d{5}', self.name, re.IGNORECASE)
+        if match is not None:
+            original_name = match[0].upper() + '.' + self.extension
+            return 'Samsung WB510', original_name
+
         # Samsung NX210 (SAM_7074.jpg)
         match = re.search(r'SAM_\d{4}', self.name, re.IGNORECASE)
         if match is not None:
@@ -81,7 +87,18 @@ class Photo(object):
         with open(self.absolute_path, 'rb') as photo:
             exif = Image(photo)
             if hasattr(exif, 'datetime_original'):
-                return datetime.strptime(exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
+                date = datetime.strptime(exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
+
+                # Samsung WB510 had wrong year settings after photo SDC14428
+                if self.camera == 'Samsung WB510':
+                    photo_id = re.search(r'SDC(\d{5})', self.name)
+                    if int(photo_id.group(1)) > 14428:
+                        if date.year == 2009:
+                            date = date.replace(year=2011)
+                        if date.year == 2010:
+                            date = date.replace(year=2012)
+
+                return date
             else:
                 return None
 
