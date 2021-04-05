@@ -32,6 +32,18 @@ sub rename_jpeg($$) {
         $timestamp =~ s/:/-/g;
         $timestamp =~ s/ /_/g;
 
+        if ($pic =~ /SDC(\d+)/) {
+            my $pic_id = $1;
+
+            # the camera had wrong year settings after photo SDC14428
+            if ($timestamp =~ /2009/ and $pic_id > 14428) {
+                $timestamp =~ s/2009/2011/g;
+            }
+            if ($timestamp =~ /2010/ and $pic_id > 14428) {
+                $timestamp =~ s/2010/2012/g;
+            }
+        }
+
         my $new_name = compose_new_name($pic, $dir, {'timestamp' => $timestamp});
         print "$full_name to \n$new_name\n\n";
         if (!rename ($full_name, $new_name)) {
