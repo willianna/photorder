@@ -22,7 +22,7 @@ parser.add_argument(
 parser.add_argument(
     '-i', '--info', dest='info',
     action="store_true",
-    help="print info about all photos in the dorectory"
+    help="print info about all photos in the directory"
 )
 
 args = parser.parse_args()
