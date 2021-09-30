@@ -1,4 +1,5 @@
 import os
+import re
 
 def restore_names(photo_directory):
     print(f"Restoring original names in {photo_directory.path}: {len(photo_directory.photos)} photos")
@@ -41,6 +42,16 @@ def rename_jpegs(photo_directory):
         if date_prefix in photo.absolute_path:
             print("  ***SKIPPED***: correct date is already in the name\n")
             continue
+
+        # trying to guess if there is prefix already
+        match = re.search(r'\d{4}-\d{2}-\d{2}', photo.name, re.IGNORECASE)
+        if match is not None:
+            print(f"  There is some date prefix already ({match[0]} instead of {date_prefix})")
+            print(f"  Do you want to add correct one - {date_prefix + photo.name}? (y/n) ", end='')
+            answer = input()
+            if answer != 'y':
+                print("  ***SKIPPED***\n")
+                continue
 
         new_name = os.path.join(photo.directory, date_prefix + photo.name)
         print("  New name:", new_name)
