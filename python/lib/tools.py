@@ -16,7 +16,11 @@ def restore_names(photo_directory):
         new_name = os.path.join(photo.directory, photo.original_name)
         print("  Restored name:", new_name)
 
-        os.rename(photo.absolute_path, new_name)
+        if os.path.isfile(new_name):
+            # TODO: should do here something about it
+            print("  ***SKIPPED***: file exists")
+        else:
+            os.rename(photo.absolute_path, new_name)
         count += 1
         print()
 
