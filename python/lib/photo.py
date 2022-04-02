@@ -42,6 +42,7 @@ class Photo(object):
         self.creation_date = self._get_creation_date()
         pass
 
+
     def _get_origin_info(self):
         # Samsung WB510 (SDC15036.jpg)
         match = re.search(r'SDC\d{5}', self.name, re.IGNORECASE)
@@ -114,7 +115,67 @@ class Photo(object):
         print()
 
 
+    def restore_original_name(self):
+        # Example of renaming: 2014-01-08_10-22-45_SAM_7074.jpg -> SAM_7074.jpg
+        old_name = self.absolute_path
+        print("       Old name:", old_name)
+        if self.original_name is None:
+            print("  ***SKIPPED***: original name is unknown\n")
+            return False
+        if self.name == self.original_name:
+            print("  ***SKIPPED***: photo has original name already\n")
+            return False
+
+        new_name = os.path.join(self.directory, self.original_name)
+        print("  Restored name:", new_name)
+
+        if os.path.isfile(new_name):
+            # TODO: should do here something about it
+            print("  ***SKIPPED***: file exists")
+            return False
+
+        os.rename(old_name, new_name)
+        return True
+
+
+    def set_date_prefix(self):
+        # Example of renaming: SAM_7074.jpg -> 2014-01-08_10-22-45_SAM_7074.jpg
+        old_name = self.absolute_path
+        print("  Old name:", self.absolute_path)
+        if self.creation_date is None:
+            print("  ***SKIPPED***: correct date is unknown\n")
+            return False
+        date_prefix = self.creation_date.strftime('%Y-%m-%d_%H-%M-%S_')
+        if date_prefix in self.absolute_path:
+            print("  ***SKIPPED***: correct date is already in the name\n")
+            return False
+
+        # trying to guess if there is SOME date prefix already
+        match = re.search(r'\d{4}-\d{2}-\d{2}', self.name, re.IGNORECASE)
+        if match is not None:
+            return False
+            # add here info about exceptions like wrong year for second camera
+            print(f"  There is some date prefix already ({match[0]} instead of {date_prefix})")
+            print(f"  Do you want to add correct one - {date_prefix + self.name}? (y/n) ", end='')
+            answer = input()
+            if answer != 'y':
+                print("  ***SKIPPED***\n")
+                return False
+
+        new_name = os.path.join(self.directory, date_prefix + self.name)
+        print("  New name:", new_name)
+
+        if os.path.isfile(new_name):
+            # TODO: should do here something about it
+            print("  ***SKIPPED***: file exists")
+            return False
+            
+        os.rename(old_name, new_name)
+        return True
+
+
 def is_photo(file):
+    # Determine by extension if the file is photo (RAW or JPEG) or not
     extension = file.split('.')[-1]
     if extension in supported_raw_formats:
         return True
