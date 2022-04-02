@@ -1,5 +1,5 @@
 test/
-python/lib/__pycache__
+**__pycache__/
 log.log
 photorder.bat
 todo.todo
