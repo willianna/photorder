@@ -1,9 +1,6 @@
-import json
-import os
 import pytest
 import os
 import shutil
-import pytest
 
 
 @pytest.fixture(scope='session', autouse=True)
