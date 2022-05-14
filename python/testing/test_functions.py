@@ -1,12 +1,5 @@
-import os
 import pytest
-import os
-
-# strange cheating to be able to import photo from lib directory
-os.sys.path.insert(0, os.getcwd())
 from lib.photo import Photo
-
-import pytest
 import testing_tools
 
 
