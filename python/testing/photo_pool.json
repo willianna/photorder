@@ -1,0 +1,56 @@
+[
+    {
+        "filename": "hunter_cat.jpg",
+        "original_name": "hunter_cat.jpg",
+        "creation_date": "",
+        "camera": "unknown",
+        "date_prefix_name": "hunter_cat.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    },
+    {
+        "filename": "SAM_2449.jpg",
+        "original_name": "SAM_2449.jpg",
+        "creation_date": "",
+        "camera": "",
+        "date_prefix_name": "2014-01-02_14-07-37_SAM_2449.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    },
+    {
+        "filename": "SAM_2456-2.jpg",
+        "original_name": "SAM_2456.jpg",
+        "creation_date": "",
+        "camera": "",
+        "date_prefix_name": "2014-01-06_13-40-20_SAM_2456-2.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    },
+    {
+        "filename": "SAM_2456.jpg",
+        "original_name": "SAM_2456.jpg",
+        "creation_date": "",
+        "camera": "",
+        "date_prefix_name": "2014-01-06_13-40-20_SAM_2456.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    },
+    {
+        "filename": "SAM_2473.jpg",
+        "original_name": "SAM_2473.jpg",
+        "creation_date": "",
+        "camera": "",
+        "date_prefix_name": "2014-01-08_10-22-45_SAM_2473.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    },
+    {
+        "filename": "SDC12418.jpg",
+        "original_name": "SDC12418.jpg",
+        "creation_date": "",
+        "camera": "",
+        "date_prefix_name": "2010-01-04_00-31-38_SDC12418.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    }
+]
