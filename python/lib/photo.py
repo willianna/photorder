@@ -68,8 +68,8 @@ class Photo(object):
             original_name = match[0].upper() + '.' + self.extension
             return 'Sony RX100 IV', original_name
 
-        # exception
-        return None, None
+        # if no exif info - camera is None and original name is just a name
+        return None, self.name
 
 
     def _get_format(self):
