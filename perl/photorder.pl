@@ -7,6 +7,7 @@ use Getopt::Long;
 
 use lib qw(.);
 use tools;
+use utilities;
 
 Getopt::Long::Configure(qw( bundling permute no_getopt_compat pass_through no_ignore_case ));
 
@@ -25,35 +26,27 @@ my %GetOptionsHash = (
     'jpeg'         => \$jpeg,
     'restore'      => \$restore,
     'all'          => \$all,
-    'dir=s'        => \$dir,
+    'dir=s'        => \$dir
 );
-GetOptions( %GetOptionsHash ) or die "Couldn't parse options\n";
+GetOptions(%GetOptionsHash) or die "Couldn't parse options\n";
 
 # if $dir is not defined use current directory
 $dir = '.' if (!defined $dir);
 
-my $handle;
-if (not opendir($handle, $dir)) {
-    print "Cannot open directory\n";
-    exit 1;
-}
-my @all_files = readdir($handle);
-close($handle);
-
 if ($jpeg or $all) {
-    if (tools::rename_jpeg($dir, \@all_files)) {
+    if (tools::rename_jpeg($dir)) {
         exit 1;
     }
 }
 
 if ($raw or $all) {
-    if (tools::rename_raw($dir, \@all_files)) {
+    if (tools::rename_raw($dir)) {
         exit 1;
     }
 }
 
 if ($restore) {
-    if (tools::restore_original_name($dir, \@all_files)) {
+    if (tools::restore_original_name($dir)) {
         exit 1;
     }
 }
