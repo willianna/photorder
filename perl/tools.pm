@@ -7,15 +7,16 @@ use Image::EXIF;
 use File::stat;
 use Time::Piece;
 
-sub rename_jpeg($$) {
-    my $dir = shift;
-    my @all_files = @{+shift};
+use utilities;
 
-    my @pics = grep {/\.(jpg|jpeg|JPG|JPEG)/} @all_files;
+sub rename_jpeg($) {
+    my $dir = shift;
+    
+    my $pics = utilities::get_files($dir, 'jpeg');
 
     # renaming JPEGs using EXIF data
     my $renamed = 0;
-    foreach my $pic (@pics) {
+    foreach my $pic (@{$pics}) {
         if ($pic =~ /^\d+/) {
             print "It seems that $pic has a date prefix already\n";
             next;
@@ -57,13 +58,12 @@ sub rename_jpeg($$) {
     return 0;
 }
 
-sub rename_raw($$) {
+sub rename_raw($) {
     my $dir = shift;
-    my @all_files = @{+shift};
 
-    my @pics = grep {/\.(CR2|ARW|SRW)/} @all_files;
+    my $pics = utilities::get_files($dir, 'raw');
     my $renamed = 0;
-    foreach my $pic (@pics) {
+    foreach my $pic (@{$pics}) {
         my $full_name = $dir.'\\'.$pic;
         if ($pic =~ /^\d+/) {
             print "It seems that $pic has a date prefix already\n";
@@ -95,15 +95,14 @@ sub compose_new_name($$$) {
     }
 }
 
-sub restore_original_name($$) {
+sub restore_original_name($) {
     my $dir = shift;
-    my @all_files = @{+shift};
 
-    my @pics = grep {/\.(jpg|jpeg|JPG|JPEG)/} @all_files;
+    my $pics = utilities::get_files($dir, 'jpeg');
 
     # restoring JPEGs names, examples: SAM_7074.jpg, IMG_1102.jpg
     my $restored = 0;
-    foreach my $pic (@pics) {
+    foreach my $pic (@{$pics}) {
         my $full_name = $dir.'\\'.$pic;
         my $new_name;
         if ($pic =~ /((sam|img|SAM|IMG)_\d\d\d\d)/) {
