@@ -8,10 +8,16 @@ def photo_pool():
         return json.load(photo_pool)
 
 
-def get_test_photo(name):
+def get_test_photo(name, new_name=None):
     get_from = os.path.abspath("testing/photo_pool" + "/" + name)
-    copy_to = os.path.abspath("testing/__in_testing" + "/" + name)
-    shutil.copy(get_from, copy_to)
+    if new_name:
+        # file will be copied and renamed to new_name
+        copy_to = os.path.abspath("testing/__in_testing" + "/" + new_name)
+    else:
+        # just copy
+        copy_to = os.path.abspath("testing/__in_testing" + "/" + name)
+
+    shutil.copy(get_from, copy_to) # need safe copy here
     print(f"  Got test photo: {copy_to}")
     return copy_to
 
