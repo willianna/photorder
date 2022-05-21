@@ -1,14 +1,5 @@
 [
     {
-        "filename": "hunter_cat.jpg",
-        "original_name": "hunter_cat.jpg",
-        "creation_date": "",
-        "camera": "unknown",
-        "date_prefix_name": "hunter_cat.jpg",
-        "wrong_date_prefix_name": "",
-        "garbage_name": ""
-    },
-    {
         "filename": "SAM_2449.jpg",
         "original_name": "SAM_2449.jpg",
         "creation_date": "",
@@ -50,6 +41,15 @@
         "creation_date": "",
         "camera": "",
         "date_prefix_name": "2010-01-04_00-31-38_SDC12418.jpg",
+        "wrong_date_prefix_name": "",
+        "garbage_name": ""
+    },
+    {
+        "filename": "hunter_cat.jpg",
+        "original_name": "hunter_cat.jpg",
+        "creation_date": "",
+        "camera": "unknown",
+        "date_prefix_name": "hunter_cat.jpg",
         "wrong_date_prefix_name": "",
         "garbage_name": ""
     }
