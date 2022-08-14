@@ -3,6 +3,8 @@ Small tool for renaming and rearranging photos.
 
 There are two independent versions - written on Perl and on Python. Basically they cover the same functionality, but probably on different stages of development.
 
+There are individual README files for every version in subdirectories.
+
 # Common info
 
 ## Examples of file names:
