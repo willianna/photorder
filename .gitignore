@@ -1,5 +1,7 @@
+.vscode/
 test/
 **__pycache__/
 log.log
 photorder.bat
 todo.todo
+**README.html
