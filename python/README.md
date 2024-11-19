@@ -10,6 +10,7 @@ RAW:
 - SAM_7074.SRW - Samsumg NX210
 - IMG_2722.CR2 - Canon G9x
 - DSC01524.ARW - Sony RX100 IV
+- PC456456 - the first camera (partly supported 'cause it has more than one prefix and I dunno all of them)
 
 JPEGs:
 - P1170111 - Olympus FE190/X750

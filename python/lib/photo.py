@@ -68,6 +68,12 @@ class Photo(object):
             original_name = match[0].upper() + '.' + self.extension
             return 'Sony RX100 IV', original_name
 
+        # The first camera - partly supported, it doesn't have proper prefix :(
+        match = re.search(r'PC\d{6}', self.name, re.IGNORECASE)
+        if match is not None:
+            original_name = match[0].upper() + '.' + self.extension
+            return 'The first camera', original_name
+
         # if no exif info - camera is None and original name is just a name
         return None, self.name
 
@@ -87,7 +93,16 @@ class Photo(object):
     def _get_creation_date(self):
         with open(self.absolute_path, 'rb') as photo:
             exif = Image(photo)
-            if hasattr(exif, 'datetime_original'):
+            is_correct_exif = False
+            # sometimes on strange pics from the internet this line fails with
+            # File "...AppData\Local\Programs\Python\Python310\lib\site-packages\exif\_image.py", line 104, in __getattr__
+            #    return getattr(self._segments["APP1"], item) KeyError: 'APP1'
+            try:
+                is_correct_exif = hasattr(exif, 'datetime_original')
+            except:
+                pass
+
+            if is_correct_exif:
                 date = datetime.strptime(exif['datetime_original'], '%Y:%m:%d %H:%M:%S')
 
                 # Samsung WB510 had wrong year settings after photo SDC14428
